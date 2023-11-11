@@ -5,6 +5,7 @@
 #include <dlfcn.h>
 
 #include "src/engine/engine_context.h"
+#include "src/game/game_context.h"
 
 void run(EngineContext* context){ 
   while(1){
@@ -35,9 +36,11 @@ void run(EngineContext* context){
 
 int main(void){ 
   EngineContext context;
+  GameContext game_context;
   context.startContext = true;
   context.endContext   = false;
- 
+  context.gameContext  = &game_context;
+
   #ifdef HOT
     context.loop = false;  
   #else 
@@ -45,5 +48,9 @@ int main(void){
   #endif   
 
   run(&context);  
+
+  SDL_DestroyRenderer(context.renderer);
+  SDL_DestroyWindow(context.window);
+  SDL_Quit();
 }
 

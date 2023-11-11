@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
 #include "types.h" 
+#include "../game/game_context.h"
 
 typedef struct EngineContext {
   // EngineContext Lifetime
@@ -17,6 +18,8 @@ typedef struct EngineContext {
   u32 WIDTH, HEIGHT;
   SDL_Renderer* renderer;
   SDL_Window* window;
+  u64 FPS;
+  u64 FRAME_TARGET;
 
   // Things
   SDL_Event event;
@@ -25,7 +28,11 @@ typedef struct EngineContext {
   f64 deltaTime;
   bool running;
   bool on_web;
-  
+
+  // Game
+  GameContext* gameContext;
+
+
 } EngineContext;
 
 #endif
