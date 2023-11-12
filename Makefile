@@ -15,7 +15,7 @@ WEBDIR := builds/web
 
 #------------------------------------------------------
 # Making 
- 
+
 default: $(BUILDDIR)/main $(BUILDDIR)/hotreload CircaEngine.so  
 
 $(BUILDDIR)/main: main.c

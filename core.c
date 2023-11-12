@@ -61,7 +61,7 @@ void engine_main(void* args){
   }
   
   SDL_SetWindowSize(ctx->window, 1080, 840);
-  SDL_SetWindowTitle(ctx->window, "NoJAMber");
+  SDL_SetWindowTitle(ctx->window, "Circa");
   
   bool running = true;
   while(running){
@@ -86,8 +86,7 @@ void engine_main(void* args){
 
     ctx->prevTime = ctx->currTime;
     
-    if(!ctx->loop) break;
-  }
+    if(!ctx->loop) break; }
   
   return;
 }
