@@ -59,10 +59,10 @@ void engine_main(void* args){
   if(ctx->startContext){
     init_context(ctx); 
   }
-
+  
   SDL_SetWindowSize(ctx->window, 1080, 840);
   SDL_SetWindowTitle(ctx->window, "Circa");
-
+  
   bool running = true;
   while(running){
     SDL_Event e;
@@ -70,12 +70,12 @@ void engine_main(void* args){
       if(e.type == SDL_QUIT){ 
         ctx->endContext = true;
         running = false;
-#ifdef WEB 
-        emscripten_cancel_main_loop();
-#endif
+        #ifdef WEB 
+          emscripten_cancel_main_loop();
+        #endif
       }
     }
-
+   
     while(!SDL_TICKS_PASSED(SDL_GetTicks(), ctx->prevTime + ctx->FRAME_TARGET));
     ctx->currTime  = SDL_GetTicks();
     ctx->deltaTime = (ctx->currTime - ctx->prevTime)/1000.0f;
@@ -85,8 +85,9 @@ void engine_main(void* args){
     game_render(ctx);
 
     ctx->prevTime = ctx->currTime;
-
-    if(!ctx->loop) break; }
-
+    
+    if(!ctx->loop) break;
+  }
+  
   return;
 }

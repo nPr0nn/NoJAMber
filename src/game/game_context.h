@@ -8,8 +8,9 @@
 #include "../engine/math/linmath.h"
 
 typedef struct GameContext { 
-  triangle mesh_cube[12];
   
+  // should be on engine contex
+  mesh mesh_cube;
   mat4 mat_proj;
   mat4 mat_world;
   mat4 mat_view;
@@ -20,15 +21,15 @@ typedef struct GameContext {
 
 	vec4 camera_pos;
   vec4 light_pos;
-  
+ 
   f32 theta_x;
   f32 theta_y;
   f32 theta_z;
-
   f32 yaw;
 
-  f32 cx;
-  f32 cy;
+  // objects
+  cube example_cube;
+  
 } GameContext;
 
 #endif

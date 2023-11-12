@@ -257,19 +257,18 @@ void mesh_destroy(mesh* m) {
 }
 
 void mesh_ensureCapacity(mesh* m, u32 newCapacity) {
-    if (newCapacity > m->capacity) {
-        m->capacity = newCapacity;
-        m->triangles = realloc(m->triangles, m->capacity * sizeof(triangle));
+  if (newCapacity > m->capacity) {   
+    m->capacity = newCapacity;
+    m->triangles = realloc(m->triangles, m->capacity * sizeof(triangle));
 
-        if (m->triangles == NULL) {
-            printf("Memory reallocation failed\n");
-            // Handle memory reallocation failure more gracefully in your actual code
-        }
+    if (m->triangles == NULL) {
+      printf("Memory reallocation failed\n");
     }
+  }
 }
 
 void mesh_push_back(mesh* m, triangle newTriangle) {
-    mesh_ensureCapacity(m, m->numTriangles * 2);
+    mesh_ensureCapacity(m, m->numTriangles + 1);
     m->triangles[m->numTriangles++] = newTriangle;
 }
 

@@ -15,6 +15,10 @@ typedef struct vec4{
   f32 z;
 } vec4;
 
+typedef struct mat4{
+  f32 m[4][4];
+} mat4;
+
 typedef struct triangle{
   vec4 p[3];
   u32 r;
@@ -23,13 +27,17 @@ typedef struct triangle{
 } triangle;
 
 typedef struct mesh {
-    triangle* triangles;
-    u32 numTriangles;
-    u32 capacity;  // Keep track of the allocated capacity
+  triangle* triangles;
+  u32 numTriangles;
+  u32 capacity;
 } mesh;
 
-typedef struct mat4{
-  f32 m[4][4];
-} mat4;
+typedef struct cube {
+  mesh mesh_cube;
+  vec4 color;
+  vec4 pos;
+  vec4 thetas;
+  f32 scale;
+} cube;
 
 #endif // LINMATH_H
