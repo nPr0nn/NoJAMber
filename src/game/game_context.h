@@ -29,7 +29,10 @@ typedef struct GameContext {
 
   // objects
   cube example_cube;
-  
+  cube example_cube_2;
+
+  cube tabuleiro[13][13];
+
 } GameContext;
 
 #endif

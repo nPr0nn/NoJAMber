@@ -28,6 +28,7 @@ typedef struct triangle{
 
 typedef struct mesh {
   triangle* triangles;
+  mat4 mat_world;
   u32 numTriangles;
   u32 capacity;
 } mesh;
