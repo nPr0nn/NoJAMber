@@ -4,6 +4,24 @@
 #include "linmath.h"
 #include "../types.h"
 
+f32 min(f32 a, f32 b){
+  if(a < b) return a;
+  return b;
+}
+
+f32 max(f32 a, f32 b){
+  if(a > b) return a;
+  return b;
+}
+
+vec4 vec4_clamp(vec4* a, f32 minimum, f32 maximum){
+  vec4 res;
+  res.x = min(max(a->x, minimum), maximum);
+  res.y = min(max(a->y, minimum), maximum);
+  res.z = min(max(a->z, minimum), maximum);
+  return res;
+}
+
 // vec4 functions
  
 void vec4_print(vec4* a){
@@ -21,17 +39,17 @@ vec4 vec4_sub(vec4* a, vec4* b){
 }
 
 vec4 vec4_mul(vec4* a, f32 k){
-  vec4 res = {1, a->x * k, a->y * k, a->z * k};
+  vec4 res = {1, (a->x)*k, (a->y)*k, (a->z)*k};
   return res;
 }
 
 vec4 vec4_div(vec4* a, f32 k){
-  vec4 res = {1, a->x * k, a->y * k, a->z * k};
+  vec4 res = {1, a->x / k, a->y / k, a->z / k};
   return res;
 }
 
 f32 vec4_dot(vec4* a, vec4* b){
-  return (a->x * b->x + a->y * b->y + a->z * b->z);
+  return ( (a->x * b->x) + (a->y * b->y) + (a->z * b->z) );
 }
 
 f32 vec4_len(vec4* a){
@@ -47,8 +65,8 @@ vec4 vec4_cross(vec4* a, vec4* b){
   vec4 res;
   res.w = 1;
   res.x = (a->y * b->z) - (b->y * a->z);
-  res.y = (a->z * b->x) - (b->z - a->x);
-  res.z = (a->x * b->y) - (b->x - a->y);
+  res.y = (a->z * b->x) - (b->z * a->x);
+  res.z = (a->x * b->y) - (b->x * a->y);
   return res;
 }
 
