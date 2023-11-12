@@ -17,7 +17,16 @@ typedef struct vec4{
 
 typedef struct triangle{
   vec4 p[3];
+  u32 r;
+  u32 g;
+  u32 b;
 } triangle;
+
+typedef struct mesh {
+    triangle* triangles;
+    u32 numTriangles;
+    u32 capacity;  // Keep track of the allocated capacity
+} mesh;
 
 typedef struct mat4{
   f32 m[4][4];

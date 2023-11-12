@@ -1,6 +1,6 @@
 
 # Desktop
-CC := gcc
+CC := gcc -fPIC
 CFLAGS := -O2 
 LDFLAGS := -ldl -lncurses -lSDL2 -lGL
 

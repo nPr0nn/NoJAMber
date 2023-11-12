@@ -4,6 +4,9 @@
 #include "linmath.h"
 #include "../types.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 f32 min(f32 a, f32 b){
   if(a < b) return a;
   return b;
@@ -105,6 +108,68 @@ mat4 mat4_transpose(mat4* A){
   return At;
 }
 
+mat4 mat4_pointAt(vec4* pos, vec4* target, vec4* up){
+  vec4 new_forward = vec4_sub(target, pos);	
+  new_forward      = vec4_normalize(&new_forward);
+
+	// New Up direction
+  f32  k   = vec4_dot(up, &new_forward);
+	vec4 aux = vec4_mul(&new_forward, k);
+  vec4 new_up = vec4_sub(up, &aux);
+  new_up = vec4_normalize(&new_up);
+
+	// New Right direction
+  vec4 new_right = vec4_cross(&new_up, &new_forward);	
+
+	mat4 T = init_mat4();
+	T.m[0][0] = new_right.x;	
+  T.m[0][1] = new_right.y;
+  T.m[0][2] = new_right.z;	
+  T.m[0][3] = 0.0f;
+	
+  T.m[1][0] = new_up.x;
+  T.m[1][1] = new_up.y;
+  T.m[1][2] = new_up.z;
+  T.m[1][3] = 0.0f;
+
+  T.m[2][0] = new_forward.x;
+  T.m[2][1] = new_forward.y;
+  T.m[2][2] = new_forward.z;
+  T.m[2][3] = 0.0f;
+
+  T.m[3][0] = pos->x;
+  T.m[3][1] = pos->y;
+  T.m[3][2] = pos->z;
+  T.m[3][3] = 1.0f;
+	
+  return T;
+}
+
+mat4 mat4_qinverse(mat4* m){
+  mat4 T;
+  T.m[0][0] = m->m[0][0]; 
+  T.m[0][1] = m->m[1][0]; 
+  T.m[0][2] = m->m[2][0]; 
+  T.m[0][3] = 0.0f;
+  
+  T.m[1][0] = m->m[0][1]; 
+  T.m[1][1] = m->m[1][1]; 
+  T.m[1][2] = m->m[2][1]; 
+  T.m[1][3] = 0.0f;
+  
+  T.m[2][0] = m->m[0][2]; 
+  T.m[2][1] = m->m[1][2]; 
+  T.m[2][2] = m->m[2][2]; 
+  T.m[2][3] = 0.0f;
+  
+  T.m[3][0] = -(m->m[3][0] * T.m[0][0] + m->m[3][1] * T.m[1][0] + m->m[3][2] * T.m[2][0]);
+  T.m[3][1] = -(m->m[3][0] * T.m[0][1] + m->m[3][1] * T.m[1][1] + m->m[3][2] * T.m[2][1]);
+  T.m[3][2] = -(m->m[3][0] * T.m[0][2] + m->m[3][1] * T.m[1][2] + m->m[3][2] * T.m[2][2]);
+  T.m[3][3] = 1.0f;
+  
+  return T;
+}
+
 mat4 mat4_translation(f32 x, f32 y, f32 z){
   mat4 T = mat4_indentity();
   T.m[3][0] = x;
@@ -171,3 +236,55 @@ vec4 vec4_transform(vec4* v, mat4* F){
   return u;
 }
 
+// mesh 0-0
+mesh mesh_create(u32 numTriangles) {
+    mesh m;
+    m.numTriangles = 0;
+    m.capacity = numTriangles;
+    m.triangles = (triangle*)malloc(numTriangles * sizeof(triangle));
+
+    if (m.triangles == NULL) {
+        printf("Memory allocation failed\n");
+    }
+
+    return m;
+}
+
+void mesh_destroy(mesh* m) {
+    free(m->triangles);
+    m->numTriangles = 0;
+    m->capacity = 0;
+}
+
+void mesh_ensureCapacity(mesh* m, u32 newCapacity) {
+    if (newCapacity > m->capacity) {
+        m->capacity = newCapacity;
+        m->triangles = realloc(m->triangles, m->capacity * sizeof(triangle));
+
+        if (m->triangles == NULL) {
+            printf("Memory reallocation failed\n");
+            // Handle memory reallocation failure more gracefully in your actual code
+        }
+    }
+}
+
+void mesh_push_back(mesh* m, triangle newTriangle) {
+    mesh_ensureCapacity(m, m->numTriangles * 2);
+    m->triangles[m->numTriangles++] = newTriangle;
+}
+
+int comp_triangles(const void *a, const void *b) {
+    const triangle *triangleA = (const triangle *)a;
+    const triangle *triangleB = (const triangle *)b;
+
+    float z_A = (triangleA->p[0].z + triangleA->p[1].z + triangleA->p[2].z) / 3.0f;
+    float z_B = (triangleB->p[0].z + triangleB->p[1].z + triangleB->p[2].z) / 3.0f;
+    
+    if (z_A < z_B) return -1;
+    if (z_A > z_B) return 1;
+    return 0;
+}
+
+void mesh_sort(mesh* m) {
+    qsort(m->triangles, m->numTriangles, sizeof(triangle), comp_triangles);
+}
